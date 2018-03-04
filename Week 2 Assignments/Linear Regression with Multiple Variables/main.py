@@ -1,11 +1,13 @@
 import tensorflow as tf
+from plotData import *
 
+##Reading data from file
 with open("./mlclass-ex1/ex1data1.txt","r") as file:
 	data = file.read()
 data = data.split('\n')
-xx = [float(row.split(',')[0]) for row in data]
-yy = [float(row.split(',')[1]) for row in data]
-m = len(yy)
+input = [float(row.split(',')[0]) for row in data]
+output = [float(row.split(',')[1]) for row in data]
+m = len(output)
 
 ########################### Part 2: Plotting ##############################
 # uncomment this part to see the graph of input datas
@@ -24,16 +26,15 @@ def computeCost(X, y, theta, m):
 
 #Computing the Cost of the the linear regression
 theta = tf.zeros([2, 1], dtype=tf.float32) #initializing theta to 0
-tmpX = tf.reshape(tf.concat([tf.ones_like(xx), xx], 0), [m,2]) #adding extra one vector of ones and reshaping it's dimension
+tmpX = tf.reshape(tf.concat([tf.ones_like(input), input], 0), [m,2]) #adding extra one vector of ones and reshaping it's dimension
 X = tf.Variable(tmpX, name="X", dtype=tf.float32)
-y = tf.expand_dims(tf.Variable(yy, name="y", dtype=tf.float32), 1) 
-alpha = 0.01
-iteration = 1500
+y = tf.expand_dims(tf.Variable(output, name="y", dtype=tf.float32), 1) 
+
 print(computeCost(X, y,theta, m)) #output is ~32.07 for the first iteration with theta values zero
 
-
+alpha = 0.01
+iteration = 100
 J_history = []
-print(y)
 theta = tf.Variable(tf.zeros([2, 1], dtype=tf.float32))
 alpha = tf.Variable(alpha)
 with tf.Session() as sess:
@@ -41,22 +42,11 @@ with tf.Session() as sess:
 	sess.run(init)
 	h = tf.matmul(X, theta)
 	transpose = tf.transpose(X);
-	for iter in range(100):
+	for iter in range(iteration):
 		tt = theta.assign_sub((alpha/m) * tf.matmul(transpose,tf.subtract(tf.matmul(X, theta), y)))
-		# print(tt)
 		theta_calculated = sess.run(tt)
-		# theta_op = theta.assign_sub()
-		# print(iter,' : ',h)
-		# theta_tmp = sess.run(theta_op)
 		cost = computeCost(X, y, theta_calculated, m)
-		if(iter % 10 == 0):
-			print(iter)
 		J_history.append(cost)
-	print(theta_calculated)
-	print(type(theta_calculated[0]))
-	print(J_history)
 
-
-from plotData import *
-hypothesisY = [(theta_calculated[0] + theta_calculated[1]*item) for item in xx]
-plotData(xx, yy,'Population of City in 10,000s', 'Profit in $10,000s', 2, 5, hypothesisY)
+hypothesisY = [(theta_calculated[0] + theta_calculated[1]*item) for item in input] #computes predicted hypothesis
+plotData(input, output,'Population of City in 10,000s', 'Profit in $10,000s', 2, 5, hypothesisY)
