@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plotData(x, y, xLabel, yLabel, xInterval, yInterval):
+def plotData(x, y, xLabel, yLabel, xInterval, yInterval,J_history):
 	def findRoundedBounds(arr, interval):
 		minimum = min(arr)
 		maximum = max(arr)
@@ -17,4 +17,7 @@ def plotData(x, y, xLabel, yLabel, xInterval, yInterval):
 	plt.ylabel(yLabel, fontsize=8)
 	plt.xlabel(xLabel, fontsize=8)
 	plt.scatter(x, y, c='red', marker='x', alpha=0.5)
+	print(len(x))
+	print(len(J_history))
+	plt.scatter(x,J_history, c='blue')
 	plt.show()
