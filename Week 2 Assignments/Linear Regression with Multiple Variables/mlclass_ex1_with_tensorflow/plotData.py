@@ -17,7 +17,5 @@ def plotData(x, y, xLabel, yLabel, xInterval, yInterval,J_history):
 	plt.ylabel(yLabel, fontsize=8)
 	plt.xlabel(xLabel, fontsize=8)
 	plt.scatter(x, y, c='red', marker='x', alpha=0.5)
-	print(len(x))
-	print(len(J_history))
-	plt.scatter(x,J_history, c='blue')
+	plt.plot(x,J_history, c='blue')
 	plt.show()
