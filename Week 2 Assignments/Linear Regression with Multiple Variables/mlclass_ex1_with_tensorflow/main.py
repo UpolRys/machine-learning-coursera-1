@@ -2,7 +2,7 @@ import tensorflow as tf
 from plotData import *
 
 ##Reading data from file
-with open("./mlclass-ex1/ex1data1.txt","r") as file:
+with open("../mlclass-ex1/ex1data1.txt","r") as file:
 	data = file.read()
 data = data.split('\n')
 input = [float(row.split(',')[0]) for row in data]
@@ -38,7 +38,6 @@ we need to convert out x values or input values add extra ones for |x0|
 To compute matrix multiplicaiton in tensorflow we need to convert one dimensional vectors to mX1 dimensional matrices
 '''
 
-
 theta = tf.zeros([2, 1], dtype=tf.float32) #initializing theta to all zeros. 
 #Here if we create with dimention [2] only two it will be vector with length 2, 
 #but in order to implement matrix multiplication we converted this vector to 1 dimentional matrix by giving dim [2, 1]
@@ -51,10 +50,11 @@ y = tf.Variable(output, name="output", dtype=tf.float32)
 y = tf.expand_dims(y, 1) # converting vector to maxtix for matrix multiplication
 
 print(computeCost(INPUT, y, theta, m))
-
 alpha = 0.01
-iteration = 200
+iteration = 50
 J_history = []
+theta0 = []
+theta1 = []
 theta = tf.Variable(tf.zeros([2, 1], dtype=tf.float32))
 alpha = tf.Variable(alpha)
 with tf.Session() as sess:
@@ -64,6 +64,8 @@ with tf.Session() as sess:
 	for iter in range(iteration):
 		tt = theta.assign_sub((alpha/m) * tf.matmul(transpose,tf.subtract(tf.matmul(INPUT, theta), y)))
 		theta_calculated = sess.run(tt)
+		theta0.append(theta_calculated[0])
+		theta1.append(theta_calculated[1])
 		cost = computeCost(INPUT, y, theta_calculated, m)
 		J_history.append(cost)
 
@@ -71,3 +73,19 @@ hypothesisY = [(theta_calculated[0] + theta_calculated[1]*item) for item in inpu
 plotData(input, output,'Population of City in 10,000s', 'Profit in $10,000s', 2, 5, hypothesisY)
 
 
+'''
+theta0_vals = np.linspace(-10, 10, 100)
+theta1_vals = np.linspace(-1, 4, 100)
+print(theta0_vals)
+print('****************')
+print(theta0_vals)
+J_vals = np.zeros((len(theta0_vals), len(theta1_vals)))
+print(len(theta1_vals))
+
+for i in range(len(theta0_vals)):
+	for j in range(len(theta1_vals)):
+		t = [theta0_vals[i], theta1_vals[j]]
+		t = tf.Variable(tf.expand_dims(t, 1), dtype=tf.float32)
+		J_vals[i][j] = computeCost(INPUT, y, t, m)
+ax.plot_surface(theta0_vals, theta1_vals, J_vals)
+'''

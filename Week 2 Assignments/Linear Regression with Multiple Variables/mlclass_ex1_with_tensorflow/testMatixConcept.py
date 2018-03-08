@@ -15,6 +15,14 @@ with tf.Session() as sess:
 	sess.run(tf.global_variables_initializer())
 	# print(tmp.eval())
 	# print(mul.eval())
-	result = tf.matmul(tmp, mul)
-	print(sess.run(result))
+	result = sess.run(tf.matmul(tmp, mul))
+	print(result)
+
+
+
+print('sdfsadfsdfsd')
+import matplotlib.pyplot as plt
+
+plt.plot(result, result)
+plt.show()
 
